@@ -1,0 +1,76 @@
+#!/bin/bash
+
+STOPTIMEOUT=10
+FMT="%a %b %d %Y %H:%M:%S GMT%z (%Z)"
+
+function is_running() {
+    return 1
+}
+
+function status() {
+    if [ is_running ]; then
+        client_result "Application is running"
+    else
+        client_result "Application is not running"
+    fi
+}
+
+
+function start() {
+    echo
+}
+
+function stop() {
+    echo
+}
+
+function restart() {
+    stop
+    start
+}
+
+function build() {
+    echo
+}
+
+function post-deploy() {
+    echo
+}
+
+function pre-build() {
+    echo
+}
+
+function tidy() {
+  client_message "Emptying log dir: $OPENSHIFT_BUILDPACK_DIR/logs"
+  shopt -s dotglob
+  rm -rf $OPENSHIFT_BUILDPACK_DIR/logs/*
+  rm -rf $OPENSHIFT_BUILDPACK_DIR/tmp/*
+}
+
+#
+#  main():
+#
+
+# Ensure arguments.
+if ! [ $# -eq 1 ]; then
+    echo "Usage: $0 [start|restart|graceful|graceful-stop|stop|status]"
+    exit 1
+fi
+
+# Source utility functions.
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+# Handle commands.
+case "$1" in
+    start)               start       ;;
+    restart|graceful)    restart     ;;
+    graceful-stop|stop)  stop        ;;
+    status)              status      ;;
+    build)               build       ;;
+    pre-build)           pre-build   ;;
+    post-deploy)         post-deploy ;;
+    tidy)                tidy        ;;
+    *) exit 0;
+esac
+
