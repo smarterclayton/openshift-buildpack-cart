@@ -2,6 +2,6 @@
 
 set -u
 
-for dir in logs tmp pid cache; do
+for dir in logs tmp pid cache packs; do
 	mkdir -p $dir
 done
