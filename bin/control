@@ -2,7 +2,8 @@
 
 STOPTIMEOUT=10
 FMT="%a %b %d %Y %H:%M:%S GMT%z (%Z)"
-
+export PORT=$OPENSHIFT_BUILDPACK_PORT
+export HOST=$OPENSHIFT_BUILDPACK_IP
 
 indent() {
   sed -u 's/^/ /'
@@ -50,14 +51,14 @@ function build() {
     else
         mkdir -p $PACK_DIR
         if [[ $BUILDPACK_URL = "git@"* ]] || [[ $BUILDPACK_URL = "git://"* ]] || [[ $BUILDPACK_URL = *".git" ]]; then
-            if (git clone $BUILDPACK_URL $PACK_DIR); then
+            if (git clone $BUILDPACK_URL $PACK_DIR | indent); then
                 echo
             else
                 message "Unable to clone $BUILDPACK_URL"
                 exit 1
             fi
         elif [[ $BUILDPACK_URL = "http://"* ]] || [[ $BUILDPACK_URL = "https://"* ]]; then
-            if (wget -O $BUILDPACK_URL | tar xvz -C $PACK_DIR); then
+            if (wget -O $BUILDPACK_URL | tar xvz -C $PACK_DIR | indent); then
                 echo
             else
                 message "Unable to download and extract $BUILDPACK_URL"
